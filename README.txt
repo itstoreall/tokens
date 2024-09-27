@@ -1,0 +1,5 @@
+validator (for dto validation): 
+https://docs.nestjs.com/pipes#class-validator
+
+configuration (for .env): 
+https://docs.nestjs.com/techniques/configuration
