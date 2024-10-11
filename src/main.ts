@@ -1,40 +1,29 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { getMicroserviceConfig } from './config/global';
 
-// /* before microservices:
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const httpPort = configService.get('HTTP_PORT');
+  const microservicePort = configService.get('MICROSERVICE_PORT');
+
   app.setGlobalPrefix('api');
-  await app.listen(4465);
-  console.log('HTTP app is listening on port', 4465);
+  await app.listen(httpPort);
+  console.log('HTTP port', httpPort);
+
+  const microserviceOptions: MicroserviceOptions =
+    getMicroserviceConfig(configService);
 
   const microserviceApp =
-    await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-      transport: Transport.TCP,
-      options: { host: 'localhost', port: 4466 },
-    });
+    await NestFactory.createMicroservice<MicroserviceOptions>(
+      AppModule,
+      microserviceOptions,
+    );
 
   await microserviceApp.listen();
-  console.log('Microservice is listening on port', 4466);
+  console.log('Microservice port:', microservicePort);
 }
-// */
-
-/*
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
-  await app.listen(4465);
-  console.log('HTTP app is listening on port', 4465);
-
-  const microserviceApp =
-    await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
-      transport: Transport.TCP,
-      options: { host: 'localhost', port: 4465 },
-    });
-
-  await microserviceApp.listen();
-  console.log('Microservice is listening on port', 4465);
-}
-*/
 bootstrap();

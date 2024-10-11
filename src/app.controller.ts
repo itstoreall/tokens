@@ -8,7 +8,7 @@ export class AppController {
   @Get()
   sendMessage(): string {
     console.log(1111);
-    this.appService.sendMessage();
-    return 'message sent!';
+    const res = this.appService.sendMessage();
+    return `message sent ${res}!`;
   }
 }

@@ -1,22 +1,25 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule } from '@nestjs/microservices';
 import { TokensModule } from './tokens/tokens.module';
 import { LoggerMiddleware } from './concept/logger.middleware';
 import { MicroserviceModule } from './microservice/microservice.module';
+import { getMicroserviceConfig } from './config/global';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TokensModule,
     MicroserviceModule,
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
-        name: 'ORDER_SERVICE',
-        transport: Transport.TCP,
-        options: { host: 'localhost', port: 4466 },
+        name: 'ORDER_MICROSERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) =>
+          getMicroserviceConfig(configService),
       },
     ]),
   ],
