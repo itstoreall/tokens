@@ -1,3 +1,7 @@
+nest g res tokens-graphql
+
+---
+
 validator (for dto validation): 
 https://docs.nestjs.com/pipes#class-validator
 

@@ -1,0 +1,23 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateTokenInput {
+  price: Float!
+  symbol: String!
+}
+
+type Mutation {
+  createToken(input: CreateTokenInput!): TokenModel!
+  updateTokenBySymbol(input: CreateTokenInput!, symbol: String!): TokenModel!
+}
+
+type Query {
+  getTokenBySymbol(symbol: String!): TokenModel!
+  tokens: [TokenModel!]!
+}
+
+type TokenModel {
+  price: Float!
+  symbol: String!
+}

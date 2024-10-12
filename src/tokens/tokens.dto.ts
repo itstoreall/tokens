@@ -4,7 +4,7 @@ const errMsg = `ERROR validation:`;
 const nasMsg = `is not a string!`;
 const nanMsg = `is not a number!`;
 
-export class CreateTokensDto {
+export class TokensDto {
   @IsString({ message: `${errMsg} Symbol ${nasMsg}` })
   symbol: string;
 
@@ -12,4 +12,4 @@ export class CreateTokensDto {
   price: number;
 }
 
-export type TUpdateTokensDto = Partial<CreateTokensDto>;
+export type TUpdateTokensDto = Partial<TokensDto>;

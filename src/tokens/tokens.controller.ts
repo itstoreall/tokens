@@ -3,7 +3,7 @@ import { TokensService } from './tokens.service';
 import { ParseIntPipe } from 'src/concept/parseInt.pipe';
 import { AuthGuard } from 'src/concept/guard';
 import { LoggingInterceptor } from 'src/concept/interceptor';
-import { CreateTokensDto } from './tokens.dto';
+import { TokensDto } from './tokens.dto';
 
 const {
   Body,
@@ -34,7 +34,7 @@ export class TokensController {
   @UseGuards(AuthGuard)
   findAll(@Query('id', ParseIntPipe) id: number) {
     console.log(this.findAllMsg, id);
-    const reqData = this.tokensService.findAll();
+    const reqData = this.tokensService.getAllTokens();
     console.log(this.reqDataMsg, reqData);
     return reqData;
   }
@@ -42,7 +42,7 @@ export class TokensController {
   @Post()
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard)
-  create(@Body() dto: CreateTokensDto) {
+  create(@Body() dto: TokensDto) {
     console.log(this.createMsg);
     return this.tokensService.create(dto);
   }

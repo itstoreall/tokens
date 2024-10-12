@@ -2,20 +2,28 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { getMicroserviceConfig } from './config/global';
+import * as gc from './config/global';
+
+const cfg = {
+  httpPort: 'HTTP_PORT',
+  microservicePort: 'MICROSERVICE_PORT',
+  apiRoute: 'api',
+  appMsg: 'HTTP port:',
+  microserviceMsg: 'Microservice port:',
+};
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const httpPort = configService.get('HTTP_PORT');
-  const microservicePort = configService.get('MICROSERVICE_PORT');
+  const httpPort = configService.get(cfg.httpPort);
+  const microservicePort = configService.get(cfg.microservicePort);
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(cfg.apiRoute);
   await app.listen(httpPort);
-  console.log('HTTP port', httpPort);
+  console.log(cfg.appMsg, httpPort);
 
   const microserviceOptions: MicroserviceOptions =
-    getMicroserviceConfig(configService);
+    gc.getMicroserviceConfig(configService);
 
   const microserviceApp =
     await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -24,6 +32,6 @@ async function bootstrap() {
     );
 
   await microserviceApp.listen();
-  console.log('Microservice port:', microservicePort);
+  console.log(cfg.microserviceMsg, microservicePort);
 }
 bootstrap();
